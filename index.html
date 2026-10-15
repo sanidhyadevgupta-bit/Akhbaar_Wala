@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Akhbaar Wala: a hyper-casual paperboy game for the Dainik Bhaskar Game Jam by Sanidhya Dev Gupta (catsarewhat). Brief, audience, process, mechanics, art direction and a playable build.">
+<meta name="author" content="Sanidhya Dev Gupta (catsarewhat)">
+<meta property="og:title" content="Akhbaar Wala · Case Study">
+<meta property="og:description" content="A one-thumb paperboy game rooted in the Indian mohalla, made for the Dainik Bhaskar Game Jam.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#6c6fb4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23e8701a'/%3E%3Crect x='10' y='24' width='44' height='16' rx='8' fill='%23f7efdd'/%3E%3Crect x='29' y='24' width='5' height='16' fill='%23b5542e'/%3E%3C/svg%3E">
+<style>html,body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Akhbaar Wala Case Study</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Mukta:wght@400;600;800&family=Mukta+Vaani:wght@600&family=Kalam:wght@400;700&family=Shrikhand&display=swap">
+<style>
+/* Layout: a designer's notebook laid over the game's dawn — hero band with the live build, then sections with a left label rail and margin notes */
+:root{
+  --dusk:#6c6fb4;
+  --peach:#f4b88c;
+  --paper:#f7efdd;
+  --card:#fffaf0;
+  --ink:#211c2b;
+  --ink-soft:#5b5163;
+  --rule:#d8c9a8;
+  --saffron:#e8701a;
+  --clay:#b5542e;
+  --mint:#9fd8c8;
+  --display:"Rozha One","Noto Serif Devanagari",Georgia,serif;
+  --body:"Mukta","Noto Sans Devanagari",system-ui,sans-serif;
+  --hand:"Kalam","Mukta",cursive;
+  color-scheme:light;
+}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;
+  background-image:repeating-linear-gradient(0deg,rgba(33,28,43,.022) 0 1px,transparent 1px 5px)}
+a{color:var(--clay);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--saffron);outline-offset:3px}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* top bar */
+.bar{border-bottom:1px solid var(--ink);background:var(--paper)}
+.bar .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-block:10px;font-size:13px;letter-spacing:.04em}
+.bar b{font-weight:800}
+.bar nav{display:flex;gap:14px;flex-wrap:wrap}
+.bar nav a{color:var(--ink);text-decoration:none;font-weight:600}
+.bar nav a:hover{color:var(--clay)}
+
+/* hero */
+.hero{background:linear-gradient(180deg,var(--dusk) 0%,#c48aa6 45%,var(--peach) 78%,var(--paper) 100%);color:var(--paper);overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:40px;align-items:center;padding-block:56px 64px}
+.eyebrow{font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin:0}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(56px,10vw,118px);line-height:.95;margin:.12em 0 .1em;text-shadow:0 5px 0 var(--clay),0 14px 34px rgba(33,28,43,.35);text-wrap:balance}
+.hero h1 span{display:block;font-size:.42em;line-height:1.2;text-shadow:0 3px 0 var(--clay)}
+.hero .dek{font-size:clamp(18px,2.2vw,22px);line-height:1.5;max-width:34ch;margin:0 0 22px;color:#fff}
+.byline{display:flex;gap:10px 18px;flex-wrap:wrap;font-size:14px;margin:0 0 26px}
+.byline span{background:rgba(33,28,43,.35);padding:4px 12px;border-radius:999px}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;font:800 17px var(--body);border:0;border-radius:6px;padding:12px 20px;cursor:pointer;text-decoration:none;transition:transform .12s}
+.btn.primary{background:var(--saffron);color:#fff;box-shadow:0 4px 0 var(--clay)}
+.btn.ghost{background:rgba(247,239,221,.14);color:#fff;border:1.5px solid rgba(247,239,221,.8)}
+.btn:active{transform:translateY(3px)}
+@media (hover:hover){.btn:hover{transform:translateY(-2px)}}
+
+/* phone frame */
+.phone-col{display:flex;flex-direction:column;align-items:center;gap:12px}
+.phone{position:relative;width:min(340px,100%);aspect-ratio:9/18.5;max-height:78vh;background:#16131f;border-radius:38px;padding:12px;box-shadow:0 30px 60px rgba(33,28,43,.45),inset 0 0 0 2px #3a3446}
+.screen{position:relative;width:100%;height:100%;border-radius:28px;overflow:hidden;background:linear-gradient(180deg,var(--dusk),var(--peach))}
+.screen iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.poster{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;border:0;cursor:pointer;color:var(--paper);background:linear-gradient(180deg,rgba(108,111,180,.0),rgba(33,28,43,.35)),linear-gradient(180deg,var(--dusk) 0%,#c48aa6 50%,var(--peach) 100%);font-family:var(--body);padding:20px;text-align:center}
+.poster .pt{font-family:var(--display);font-size:46px;line-height:1;text-shadow:0 4px 0 var(--clay)}
+.poster .pb{font-weight:800;font-size:18px;background:var(--saffron);color:#fff;padding:12px 22px;border-radius:999px;box-shadow:0 4px 0 var(--clay)}
+.poster .ps{font-size:13px;opacity:.9;max-width:24ch}
+.phone-note{font-family:var(--hand);font-size:17px;color:var(--ink);text-align:center;max-width:30ch;margin:0}
+.phone-links{display:flex;gap:14px;font-size:14px;flex-wrap:wrap;justify-content:center}
+
+/* sections */
+section.part{border-top:1px solid var(--ink)}
+.part .wrap{display:grid;grid-template-columns:200px minmax(0,1fr);gap:32px;padding-block:56px}
+.rail{position:relative}
+.rail .label{font-weight:800;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--saffron);margin:0 0 6px}
+.rail .hi{font-family:var(--display);font-size:26px;line-height:1.15;margin:0;color:var(--ink)}
+.rail .hi[lang="gu"]{font-family:"Shrikhand","Mukta Vaani",serif;font-size:22px}
+.content{min-width:0;display:flex;flex-direction:column;gap:20px}
+h2{font-family:var(--display);font-weight:400;font-size:clamp(30px,4.4vw,46px);line-height:1.1;margin:0;text-wrap:balance}
+h3{font-family:var(--display);font-weight:400;font-size:24px;line-height:1.2;margin:0}
+p{margin:0;max-width:66ch}
+.lede{font-size:20px;line-height:1.55}
+.note{font-family:var(--hand);color:var(--clay);font-size:18px;line-height:1.4;transform:rotate(-1.2deg);max-width:44ch}
+.brief{background:var(--ink);color:var(--paper);padding:28px 30px;position:relative;max-width:760px}
+.brief::before{content:"";position:absolute;left:-1px;top:-1px;bottom:-1px;width:8px;background:var(--saffron)}
+.brief q{display:block;font-family:var(--display);font-size:clamp(22px,3vw,30px);line-height:1.3;quotes:"“" "”"}
+.brief small{display:block;margin-top:12px;font-size:13px;letter-spacing:.06em;opacity:.75}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.card{background:var(--card);border:1.5px solid var(--ink);padding:18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card p{font-size:15.5px;line-height:1.55}
+.card .k{font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.persona{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:start}
+.avatar{width:72px;height:72px;border-radius:50%;background:var(--mint);display:grid;place-items:center;font-family:var(--display);font-size:30px;color:var(--ink);border:2px solid var(--ink)}
+.facts{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.facts li{font-size:13px;background:var(--paper);border:1px solid var(--rule);padding:2px 10px;border-radius:999px}
+.tablewrap{overflow-x:auto;border:1.5px solid var(--ink);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:15px;min-width:520px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);background:var(--paper)}
+tr:last-child td{border-bottom:0}
+td.num{font-variant-numeric:tabular-nums;font-weight:800;white-space:nowrap}
+td:first-child{font-weight:600}
+
+/* process */
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;counter-reset:s}
+.step{display:grid;grid-template-columns:64px minmax(0,1fr);gap:18px;padding:20px 0;border-bottom:1px dashed var(--rule);counter-increment:s}
+.step:last-child{border-bottom:0}
+.step::before{content:counter(s);font-family:var(--display);font-size:44px;line-height:1;color:var(--saffron)}
+.step h3{margin-bottom:6px}
+.step p{font-size:16px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chips span{font-size:13px;border:1.5px solid var(--ink);padding:2px 10px;border-radius:999px;background:var(--card)}
+.chips span.pick{background:var(--saffron);border-color:var(--saffron);color:#fff;font-weight:800}
+.chips span.cut{text-decoration:line-through;color:var(--ink-soft);border-color:var(--rule)}
+.fix{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin-top:12px}
+.fix div{background:var(--card);border:1.5px solid var(--rule);padding:10px 12px;font-size:14px;line-height:1.45}
+.fix div.after{border-color:var(--ink)}
+.fix .arrow{font-family:var(--display);font-size:28px;color:var(--saffron)}
+
+/* diagrams */
+figure{margin:0;background:var(--card);border:1.5px solid var(--ink);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+figure svg{width:100%;height:auto;display:block}
+figcaption{font-size:14px;color:var(--ink-soft)}
+
+/* art */
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.sw{border:1.5px solid var(--ink);background:var(--card);display:flex;flex-direction:column}
+.sw i{display:block;height:70px;border-bottom:1.5px solid var(--ink)}
+.sw span{padding:8px 10px;font-size:13px;line-height:1.3}
+.sw span b{display:block;font-size:14px}
+.sw code{font-size:12px;color:var(--ink-soft)}
+.houses{display:flex;gap:0;border:1.5px solid var(--ink);height:44px}
+.houses i{flex:1}
+.type{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.spec{background:var(--card);border:1.5px solid var(--ink);padding:16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.spec .big{font-size:40px;line-height:1.15;overflow-wrap:anywhere}
+.spec .meta{font-size:13px;color:var(--ink-soft)}
+.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 24px;margin:0;padding:0;list-style:none}
+.details li{padding-left:22px;position:relative;font-size:15.5px;line-height:1.5}
+.details li::before{content:"";position:absolute;left:0;top:.5em;width:10px;height:12px;background:var(--clay);clip-path:polygon(0 0,100% 0,82% 100%,18% 100%)}
+.langs{display:flex;gap:10px;flex-wrap:wrap}
+.langs span{font-size:22px;background:var(--card);border:1.5px solid var(--ink);padding:6px 14px}
+
+/* tools */
+.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.tool{background:var(--card);border:1.5px solid var(--ink);padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.tool b{font-size:16px}
+.tool span{font-size:14.5px;color:var(--ink-soft);line-height:1.45}
+.numbers{display:flex;flex-wrap:wrap;gap:28px;padding:6px 0}
+.numbers div{display:flex;flex-direction:column}
+.numbers b{font-family:var(--display);font-weight:400;font-size:40px;line-height:1.1}
+.numbers span{font-size:13px;color:var(--ink-soft)}
+
+footer{background:var(--ink);color:var(--paper)}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-end;padding-block:40px calc(40px + env(safe-area-inset-bottom,0px))}
+footer .mark{font-family:var(--display);font-size:clamp(30px,5vw,48px);line-height:1.1}
+footer .mark small{display:block;font-family:var(--body);font-size:15px;opacity:.75;letter-spacing:.06em}
+footer p{font-size:14px;opacity:.8}
+
+@media (max-width:860px){
+  .hero .wrap{grid-template-columns:1fr;padding-block:40px 48px}
+  .part .wrap{grid-template-columns:1fr;gap:16px;padding-block:40px}
+  .rail{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+  .grid3,.type{grid-template-columns:1fr}
+  .grid2,.details{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  body{font-size:16px}
+  .fix{grid-template-columns:1fr}
+  .fix .arrow{transform:rotate(90deg);justify-self:center}
+  .step{grid-template-columns:44px minmax(0,1fr);gap:12px}
+  .step::before{font-size:34px}
+  .persona{grid-template-columns:1fr}
+  .brief{padding:22px 20px}
+}
+</style>
+</head>
+<body>
+
+
+<div class="bar">
+  <div class="wrap">
+    <span><b>Sanidhya Dev Gupta</b> · catsarewhat</span>
+    <nav aria-label="Sections">
+      <a href="#brief">Brief</a><a href="#audience">Audience</a><a href="#process">Process</a><a href="#mechanics">Mechanics</a><a href="#art">Art</a><a href="#tools">Tools</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Dainik Bhaskar Game Jam · 2026</p>
+      <h1>Akhbaar Wala<span>अख़बार वाला · છાપાવાળો</span></h1>
+      <p class="dek">A one-thumb hyper-casual game where you ride a paperboy's cycle through a dawn mohalla and land the morning paper on every subscriber's porch.</p>
+      <p class="byline"><span>Design &amp; development: Sanidhya Dev Gupta</span><span>catsarewhat</span><span>three.js · Web Audio</span></p>
+      <div class="cta">
+        <a class="btn primary" href="#play" id="heroPlay">Play the build</a>
+        <a class="btn ghost" href="#process">Read the process</a>
+      </div>
+    </div>
+    <div class="phone-col" id="play">
+      <div class="phone">
+        <div class="screen" id="screen">
+          <button class="poster" id="poster" type="button" aria-label="Load the playable build">
+            <span class="pt">अख़बार वाला</span>
+            <span class="pb">Tap to play</span>
+            <span class="ps">Turn sound on. Tap left, middle or right inside the screen.</span>
+          </button>
+        </div>
+      </div>
+      <p class="phone-note">Playable build: the full game, running right here.</p>
+      <div class="phone-links"><a href="game.html">Open full screen ↗</a><a href="https://catsarewhat.itch.io/akhbaar-wala" target="_blank" rel="noopener">Play on itch.io ↗</a></div>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="part" id="brief">
+  <div class="wrap">
+    <div class="rail"><p class="label">The brief</p><p class="hi">संक्षेप</p></div>
+    <div class="content">
+      <div class="brief"><q>Create a hyper-casual game rooted in Indian context, for Indian people, targeting the users of Dainik Bhaskar's app.</q><small>DAINIK BHASKAR GAME JAM</small></div>
+      <p class="lede">Three constraints sit inside that sentence. The game has to be hyper-casual: understood in seconds, played with one mechanic, finished in a minute. It has to feel Indian in its details, not only in its skin. And it has to belong inside a news app, where people arrive to read, not to play.</p>
+      <p class="note">The third one decided everything. A good answer had to feel like it grew out of the newspaper itself.</p>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="why">
+  <div class="wrap">
+    <div class="rail"><p class="label">Why this game</p><p class="hi">क्यों</p></div>
+    <div class="content">
+      <h2>The paperboy is the oldest link between Bhaskar and its readers</h2>
+      <p>For decades the newspaper reached people the same way: rolled up, tossed from a bicycle at dawn, landing on the porch. Before Dainik Bhaskar was an app, it was a bundle on a carrier and a rider who knew every house in the lane.</p>
+      <p>Instead of inventing a world and attaching the brand to it, I put the player on that cycle. The job of the game is the job of the paper: get the news to every door before sunrise. That gives the brand a reason to exist inside the game, and it makes the game instantly familiar to the people who will play it.</p>
+      <p>It also opened a door that most jam games don't have: the game can carry the day's real headlines. Every delivery flips a headline in the ticker, and the daily route is framed as "today's edition".</p>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="audience">
+  <div class="wrap">
+    <div class="rail"><p class="label">Target audience</p><p class="hi">पाठक</p></div>
+    <div class="content">
+      <h2>Designed for the Bhaskar reader, not the typical gamer</h2>
+      <p>Dainik Bhaskar's readers are largely Hindi-first, spread across Tier 2 and Tier 3 cities in Madhya Pradesh, Rajasthan, Chhattisgarh, Haryana, Bihar and, through Divya Bhaskar, Gujarat. Many are older than the usual mobile-game player, use budget Android phones, and open the app to read news between other things.</p>
+      <div class="card persona">
+        <div class="avatar" aria-hidden="true">रा</div>
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+          <span class="k">Design persona (illustrative)</span>
+          <h3>Rajesh, 44, runs a hardware shop in Indore</h3>
+          <p>Reads the Bhaskar app with his morning chai and again after lunch. Plays Ludo with family on WhatsApp groups. Has a mid-range Android with limited storage. Won't sit through a tutorial, but will play anything that makes sense in five seconds and lets him share a score with his nephew.</p>
+          <ul class="facts"><li>Hindi-first</li><li>2–5 minute sessions</li><li>Budget Android</li><li>Shares on WhatsApp</li><li>Reads his city edition</li></ul>
+        </div>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>What we know about them</th><th>What the game does about it</th></tr></thead>
+          <tbody>
+            <tr><td>They open the app to read, not to play</td><td>Rounds last about a minute, the game loads instantly, and every screen is styled as a newspaper page so it feels native to the app.</td></tr>
+            <tr><td>Budget phones, patchy data</td><td>Low-poly 3D with no textures or audio files. Music and sound are synthesised live. The whole game is one file of about 130 KB.</td></tr>
+            <tr><td>Hindi-first, with a large Gujarati readership</td><td>Full Hindi, Gujarati and English, each in its own script and fonts, down to the signs in the 3D street and the countdown numerals.</td></tr>
+            <tr><td>Older, less practised with games</td><td>One mechanic, three tap zones, no reading needed to start, and optional aim help.</td></tr>
+            <tr><td>WhatsApp is how things spread</td><td>Every result can be copied as a ready-made WhatsApp message in the player's language.</td></tr>
+            <tr><td>Loyal to their city edition</td><td>The player picks a city, menus read "Indore Edition", and best scores are kept per city.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="process">
+  <div class="wrap">
+    <div class="rail"><p class="label">Design process</p><p class="hi">प्रक्रिया</p></div>
+    <div class="content">
+      <h2>From eight ideas to a daily habit</h2>
+      <ol class="steps">
+        <li class="step"><div>
+          <h3>Ideate against the brief</h3>
+          <p>I sketched eight concepts, each built on one tap or swipe and something every Bhaskar reader would recognise. I scored them on brand fit, instant readability, and whether the news could live inside the game.</p>
+          <div class="chips"><span class="pick">Akhbaar Wala</span><span class="cut">Cutting Chai</span><span class="cut">Sach ya Jhooth</span><span class="cut">Gully Cricket</span><span class="cut">Patang Kaat</span><span class="cut">Pani Puri Rush</span><span class="cut">Traffic Jugaad</span><span class="cut">Mandi Taraazu</span></div>
+        </div></li>
+        <li class="step"><div>
+          <h3>Prototype the core loop</h3>
+          <p>A three.js street that generates itself as you ride, with houses on both sides. Saffron rings mark subscribers. Tapping the left or right third throws a paper on a real arc, the middle third hops. Kulhads stand in for lives, and paper bundles on the road refill your stock.</p>
+        </div></li>
+        <li class="step"><div>
+          <h3>Add screens and juice</h3>
+          <p>A splash screen with a front-on hero shot, a main menu, pause and game over screens, all styled as front pages and joined by a page-turn wipe. Then the feel: confetti on delivery, a freeze-frame and zoom kick on bullseyes, screen shake and a cracking kulhad on damage, squash and stretch on jumps, and the camera swooping from the menu view to behind the rider.</p>
+        </div></li>
+        <li class="step"><div>
+          <h3>Fix what playtesting showed</h3>
+          <p>The first rider read as someone walking, not cycling. His arms hung backwards and his legs swung like a walk cycle. I rebuilt the pose.</p>
+          <div class="fix">
+            <div>Before: arms angled behind the body, legs swinging back and forth from the hip, no pedals.</div>
+            <span class="arrow" aria-hidden="true">→</span>
+            <div class="after">After: seated and leaning over the bars, left hand fixed on the handle, a turning crank, and two-joint legs solved every frame so the feet stay on the pedals.</div>
+          </div>
+        </div></li>
+        <li class="step"><div>
+          <h3>Build the daily loop, sound and languages</h3>
+          <p>The brief asked for daily engagement, so the game became a daily edition: a reward streak, a route that is the same for every player that day, three tasks, tips to earn and a shop to spend them in. Alongside it came procedural Indian music, a settings screen, and Hindi, Gujarati and English.</p>
+        </div></li>
+      </ol>
+      <p class="note">The walking-rider problem showed up by playing on a phone. That became the rule: if something doesn't read at arm's length on a small screen, it changes.</p>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="mechanics">
+  <div class="wrap">
+    <div class="rail"><p class="label">Mechanics</p><p class="hi">खेल</p></div>
+    <div class="content">
+      <h2>Three taps, one whole neighbourhood</h2>
+      <div class="grid2">
+        <figure>
+          <svg viewBox="0 0 320 300" role="img" aria-labelledby="zt">
+            <title id="zt">The screen is split into three tap zones: left throws left, middle hops, right throws right</title>
+            <rect x="70" y="10" width="180" height="280" rx="22" fill="#16131f"/>
+            <rect x="80" y="20" width="160" height="260" rx="14" fill="#c48aa6"/>
+            <rect x="80" y="20" width="54" height="260" fill="#e8701a" fill-opacity=".22"/>
+            <rect x="186" y="20" width="54" height="260" fill="#e8701a" fill-opacity=".22"/>
+            <line x1="134" y1="20" x2="134" y2="280" stroke="#f7efdd" stroke-width="2" stroke-dasharray="6 5"/>
+            <line x1="186" y1="20" x2="186" y2="280" stroke="#f7efdd" stroke-width="2" stroke-dasharray="6 5"/>
+            <path d="M140 280 L180 280 L168 150 L152 150 Z" fill="#5b5569"/>
+            <circle cx="160" cy="232" r="9" fill="#f3eee2"/>
+            <rect x="156" y="240" width="8" height="22" fill="#1d5a8a"/>
+            <path d="M152 222 Q120 180 104 200" fill="none" stroke="#f7efdd" stroke-width="2.5" stroke-dasharray="4 4"/>
+            <path d="M168 222 Q200 180 216 200" fill="none" stroke="#f7efdd" stroke-width="2.5" stroke-dasharray="4 4"/>
+            <ellipse cx="104" cy="206" rx="14" ry="5" fill="none" stroke="#ff8a1f" stroke-width="3"/>
+            <ellipse cx="216" cy="206" rx="14" ry="5" fill="none" stroke="#ff8a1f" stroke-width="3"/>
+            <text x="107" y="60" text-anchor="middle" font-family="Mukta,sans-serif" font-size="13" font-weight="800" fill="#211c2b">THROW</text>
+            <text x="107" y="76" text-anchor="middle" font-family="Mukta,sans-serif" font-size="13" font-weight="800" fill="#211c2b">LEFT</text>
+            <text x="160" y="60" text-anchor="middle" font-family="Mukta,sans-serif" font-size="13" font-weight="800" fill="#f7efdd">HOP</text>
+            <text x="213" y="60" text-anchor="middle" font-family="Mukta,sans-serif" font-size="13" font-weight="800" fill="#211c2b">THROW</text>
+            <text x="213" y="76" text-anchor="middle" font-family="Mukta,sans-serif" font-size="13" font-weight="800" fill="#211c2b">RIGHT</text>
+            <text x="38" y="150" text-anchor="middle" font-family="Kalam,cursive" font-size="15" fill="#b5542e">34%</text>
+            <text x="282" y="150" text-anchor="middle" font-family="Kalam,cursive" font-size="15" fill="#b5542e">34%</text>
+          </svg>
+          <figcaption>The whole control scheme. Big zones mean no precision is needed, and the rider never steers.</figcaption>
+        </figure>
+        <figure>
+          <svg viewBox="0 0 520 360" role="img" aria-labelledby="lt">
+            <title id="lt">The daily loop: daily reward, today's route, three tasks, tips spent in the shop, next edition countdown, back to daily reward</title>
+            <circle cx="260" cy="190" r="128" fill="none" stroke="#d8c9a8" stroke-width="3" stroke-dasharray="8 6"/>
+            <g fill="#e8701a">
+              <path d="M-7 -6 L7 0 L-7 6 Z" transform="translate(335.2 86.4) rotate(36)"/>
+              <path d="M-7 -6 L7 0 L-7 6 Z" transform="translate(381.7 229.6) rotate(108)"/>
+              <path d="M-7 -6 L7 0 L-7 6 Z" transform="translate(260 318) rotate(180)"/>
+              <path d="M-7 -6 L7 0 L-7 6 Z" transform="translate(138.3 229.6) rotate(252)"/>
+              <path d="M-7 -6 L7 0 L-7 6 Z" transform="translate(184.8 86.4) rotate(324)"/>
+            </g>
+            <text x="260" y="184" text-anchor="middle" font-family="Rozha One,serif" font-size="28" fill="#211c2b">हर दिन</text>
+            <text x="260" y="206" text-anchor="middle" font-family="Mukta,sans-serif" font-size="13" fill="#5b5163">a new edition</text>
+            <g font-family="Mukta,sans-serif" text-anchor="middle">
+              <rect x="182" y="36" width="156" height="52" fill="#211c2b"/><text x="260" y="58" font-size="14" font-weight="800" fill="#f7efdd">Daily reward</text><text x="260" y="76" font-size="11.5" fill="#f7efdd">7-day streak, ₹20 → ₹150</text>
+              <rect x="304" y="124" width="156" height="52" fill="#e8701a"/><text x="382" y="146" font-size="14" font-weight="800" fill="#ffffff">Today's route</text><text x="382" y="164" font-size="11.5" fill="#ffffff">600 m, same for everyone</text>
+              <rect x="257" y="268" width="156" height="52" fill="#fffaf0" stroke="#211c2b" stroke-width="1.5"/><text x="335" y="290" font-size="14" font-weight="800" fill="#211c2b">Three tasks</text><text x="335" y="308" font-size="11.5" fill="#5b5163">Count in any mode</text>
+              <rect x="107" y="268" width="156" height="52" fill="#fffaf0" stroke="#211c2b" stroke-width="1.5"/><text x="185" y="290" font-size="14" font-weight="800" fill="#211c2b">Tips → shop</text><text x="185" y="308" font-size="11.5" fill="#5b5163">Bikes, pagdi, Diwali theme</text>
+              <rect x="60" y="124" width="156" height="52" fill="#9fd8c8" stroke="#211c2b" stroke-width="1.5"/><text x="138" y="146" font-size="14" font-weight="800" fill="#211c2b">Next edition</text><text x="138" y="164" font-size="11.5" fill="#211c2b">Countdown to midnight</text>
+            </g>
+          </svg>
+          <figcaption>The daily engagement loop the brief asked for. Each part gives a reason to open the app again tomorrow.</figcaption>
+        </figure>
+      </div>
+      <h3>Scoring and rules</h3>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Event</th><th>Effect</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td>Paper lands in the ring</td><td class="num">+10</td><td>The basic success, generous radius so first throws land.</td></tr>
+            <tr><td>Paper lands dead centre</td><td class="num">+25</td><td>A skill ceiling, rewarded with a freeze-frame and gold flash.</td></tr>
+            <tr><td>4 and 8 deliveries in a row</td><td class="num">×2, ×3</td><td>Streaks keep good players tense and give the combo banner a moment.</td></tr>
+            <tr><td>Paper on a non-subscriber's porch</td><td class="num">−5</td><td>Makes aiming matter without ending the run.</td></tr>
+            <tr><td>Hop clean over a dog or pothole</td><td class="num">+5</td><td>Turns a hazard into a small reward.</td></tr>
+            <tr><td>Miss a subscriber or crash</td><td class="num">−1 kulhad</td><td>Three lives, shown as clay cups that crack.</td></tr>
+            <tr><td>Ride through a bundle</td><td class="num">+10 papers</td><td>Start with 15, carry up to 30, so stock is a light resource.</td></tr>
+            <tr><td>Finish the daily route</td><td class="num">+200</td><td>A clear end point that a shared daily score needs.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Speed rises from 9 to 18 metres a second over a run, and the music's tabla speeds up with it. Throws inherit the cycle's speed, so you release before the house, the way a real paperboy does.</p>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="art">
+  <div class="wrap">
+    <div class="rail"><p class="label">Art direction</p><p class="hi">रूप-रंग</p></div>
+    <div class="content">
+      <h2>Dawn in a mohalla, printed on newsprint</h2>
+      <p>Two ideas carry the look. The world is the colour of 5:30 in the morning, a violet sky warming to peach. The interface is the newspaper itself: every menu is a front page with a dateline, a city edition and a ₹5 cover price, and moving between screens turns the page.</p>
+      <div class="swatches">
+        <div class="sw"><i style="background:#6c6fb4"></i><span><b>Dawn violet</b><code>#6C6FB4</code></span></div>
+        <div class="sw"><i style="background:#f4b88c"></i><span><b>Sunrise peach</b><code>#F4B88C</code></span></div>
+        <div class="sw"><i style="background:#f7efdd"></i><span><b>Newsprint</b><code>#F7EFDD</code></span></div>
+        <div class="sw"><i style="background:#211c2b"></i><span><b>Ink</b><code>#211C2B</code></span></div>
+        <div class="sw"><i style="background:#e8701a"></i><span><b>Saffron</b><code>#E8701A</code></span></div>
+        <div class="sw"><i style="background:#b5542e"></i><span><b>Kulhad clay</b><code>#B5542E</code></span></div>
+      </div>
+      <div>
+        <p style="font-size:14px;color:var(--ink-soft);margin-bottom:6px">House paints, picked from colony walls</p>
+        <div class="houses" aria-hidden="true"><i style="background:#f3a6b7"></i><i style="background:#9fd8c8"></i><i style="background:#f6d36b"></i><i style="background:#8fc3e8"></i><i style="background:#f2b880"></i><i style="background:#c9b3e6"></i><i style="background:#e9e2cf"></i><i style="background:#a8d68f"></i></div>
+      </div>
+      <div class="type">
+        <div class="spec"><span class="big" style="font-family:'Rozha One',serif">अख़बार</span><span><b>Rozha One</b> · masthead and headlines</span><span class="meta">A Devanagari serif with the weight of a newspaper nameplate.</span></div>
+        <div class="spec"><span class="big" style="font-family:Mukta,sans-serif;font-weight:800">डिलीवरी</span><span><b>Mukta</b> · interface text</span><span class="meta">Clear at small sizes on low-resolution screens.</span></div>
+        <div class="spec"><span class="big" style="font-family:Kalam,cursive;font-weight:700">शाबाश!</span><span><b>Kalam</b> · in-game callouts</span><span class="meta">Feels like a hand-painted shop sign.</span></div>
+      </div>
+      <div class="langs" aria-label="Title in three languages">
+        <span style="font-family:'Rozha One',serif">अख़बार वाला</span>
+        <span style="font-family:Shrikhand,'Mukta Vaani',serif">છાપાવાળો</span>
+        <span style="font-family:'Rozha One',serif">Akhbaar Wala</span>
+      </div>
+      <p style="font-size:15px;color:var(--ink-soft)">Gujarati uses its own family: Shrikhand for display, Mukta Vaani for text and Farsan for callouts.</p>
+      <h3>Details only this place would have</h3>
+      <ul class="details">
+        <li>A black water tank on every roof</li>
+        <li>Lives as kulhads that crack when you lose one</li>
+        <li>Chai tapris with tin roofs between houses</li>
+        <li>Cows resting on the roadside</li>
+        <li>Kerbs painted in black and yellow stripes</li>
+        <li>Diyas on subscribers' gates, and an "अख़बार यहाँ" sign</li>
+        <li>A ३-२-१ countdown in Devanagari, ૩-૨-૧ in Gujarati</li>
+        <li>Customers named Sharma ji, Gupta aunty and Patel kaka</li>
+        <li>A Diwali Night theme with fairy lights and lit windows</li>
+        <li>A paperboy with a gamcha, jhola and a carrier bundle</li>
+      </ul>
+      <h3>Sound</h3>
+      <p>All audio is generated in the browser. A tanpura plucks Pa–Sa–Sa–Sa, the tabla plays a keherwa theka, and a bansuri improvises on raag Bhupali. The melody is generated from the date, so every day's edition has its own tune. The tabla follows your speed, quietens in menus and drops out on game over.</p>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="tools">
+  <div class="wrap">
+    <div class="rail"><p class="label">Tools used</p><p class="hi">औज़ार</p></div>
+    <div class="content">
+      <h2>One file, no assets</h2>
+      <div class="numbers">
+        <div><b>~130 KB</b><span>whole game, one HTML file</span></div>
+        <div><b>0</b><span>image or audio files</span></div>
+        <div><b>3</b><span>languages</span></div>
+        <div><b>128</b><span>translated strings each</span></div>
+      </div>
+      <div class="tools">
+        <div class="tool"><b>three.js (r128)</b><span>The 3D street, rider, houses, particles and camera.</span></div>
+        <div class="tool"><b>Web Audio API</b><span>Procedural music and every sound effect, synthesised live.</span></div>
+        <div class="tool"><b>HTML, CSS, JavaScript</b><span>Menus, transitions, HUD and game logic, with no framework.</span></div>
+        <div class="tool"><b>Google Fonts</b><span>Rozha One, Mukta, Kalam, Shrikhand, Mukta Vaani and Farsan.</span></div>
+        <div class="tool"><b>Browser storage</b><span>Saves streaks, tips, shop items and best scores on the device.</span></div>
+        <div class="tool"><b>Claude (Anthropic)</b><span>AI pair for ideation and implementation, directed and playtested by me.</span></div>
+      </div>
+      <h3>What comes next</h3>
+      <p>Pull the ticker and the daily route from Bhaskar's real morning edition, move city leaderboards to a server so "Indore vs Bhopal" is live, and add a gentle notification when tomorrow's edition is ready.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="mark">Sanidhya Dev Gupta<small>catsarewhat</small></div>
+    <p>Akhbaar Wala · made for the Dainik Bhaskar Game Jam, 2026</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const poster = document.getElementById('poster');
+  function load(){
+    if(!poster.isConnected) return;
+    const f = document.createElement('iframe');
+    f.src = 'game.html';
+    f.title = 'Akhbaar Wala playable build';
+    f.allow = 'autoplay; fullscreen; screen-wake-lock; vibrate';
+    poster.replaceWith(f);
+    setTimeout(() => { try{ f.focus(); }catch(e){} }, 300);
+  }
+  poster.addEventListener('click', load);
+  document.getElementById('heroPlay').addEventListener('click', () => setTimeout(load, 350));
+})();
+</script>
+
+</body>
+</html>
